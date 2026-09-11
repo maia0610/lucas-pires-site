@@ -208,6 +208,56 @@
   }
   .about p + p{ margin-top: 14px; }
 
+  /* TIMELINE */
+  .log{
+    border-left: 2px solid var(--panel-border);
+    margin-left: 6px;
+    padding-left: 26px;
+  }
+  .log-entry{
+    position: relative;
+    padding-bottom: 30px;
+  }
+  .log-entry:last-child{ padding-bottom: 0; }
+  .log-entry::before{
+    content: '';
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--green);
+  }
+  .log-entry.current::before{ border-color: var(--amber); }
+  .log-time{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin: 0 0 4px;
+  }
+  .log-time .tag{
+    color: var(--amber);
+    border: 1px solid color-mix(in srgb, var(--amber) 45%, transparent);
+    border-radius: 100px;
+    padding: 1px 8px;
+    margin-left: 8px;
+    font-size: 10px;
+  }
+  .log-role{
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 8px;
+  }
+  .log-desc{
+    font-size: 14px;
+    color: var(--text-dim);
+    margin: 0;
+    max-width: 58ch;
+  }
+
   /* SKILLS DASHBOARD */
   .board{
     display: grid;
@@ -247,11 +297,18 @@
     margin-right: 5px;
     font-size: 9px;
   }
+  .svc-desc{
+    font-size: 13px;
+    color: var(--text);
+    margin: 0 0 10px;
+    line-height: 1.5;
+  }
   .svc-list{
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-dim);
     margin: 0;
     line-height: 1.7;
+    font-family: var(--mono);
   }
 
   /* CERTS */
@@ -329,6 +386,7 @@
     <div class="brand"><span class="prompt">$</span> lucas.pires</div>
     <div class="navlinks">
       <a href="#sobre">~/sobre</a>
+      <a href="#trajetoria">~/trajetoria</a>
       <a href="#skills">~/skills</a>
       <a href="#certs">~/certs</a>
       <a href="#contato">~/contato</a>
@@ -378,6 +436,54 @@
   </div>
 </section>
 
+<section id="trajetoria">
+  <div class="wrap">
+    <p class="kicker"><span class="p">$</span> tail -f trajetoria.log</p>
+    <h2 class="section-title">Trajetória</h2>
+    <div class="log">
+
+      <div class="log-entry current">
+        <p class="log-time">out/2025 → atual <span class="tag">atual</span></p>
+        <p class="log-role">Analista de Infraestrutura Pleno / DevOps</p>
+        <p class="log-desc">
+          Infraestrutura como código com Terraform para provisionamento em Azure e AWS, pipelines de CI/CD com
+          GitHub Actions, containerização com Docker e orquestração em Kubernetes. Também sigo administrando
+          ambientes Windows/Linux, Microsoft 365 e a intranet corporativa.
+        </p>
+      </div>
+
+      <div class="log-entry">
+        <p class="log-time">ago/2023 → out/2025</p>
+        <p class="log-role">Analista NOC</p>
+        <p class="log-desc">
+          Monitoramento de tráfego de rede e sistemas em tempo real em ambiente corporativo de grande porte
+          (setor bancário), resposta a incidentes e troubleshooting. Coordenava escala de plantão da equipe,
+          treinava novos analistas e era o ponto focal técnico do time.
+        </p>
+      </div>
+
+      <div class="log-entry">
+        <p class="log-time">out/2021 → ago/2022</p>
+        <p class="log-role">Analista de Suporte</p>
+        <p class="log-desc">
+          Administração de contas, grupos e políticas de segurança no Active Directory, rotinas de backup e
+          recuperação de dados, documentação técnica de procedimentos operacionais.
+        </p>
+      </div>
+
+      <div class="log-entry">
+        <p class="log-time">jan/2019 → jul/2020</p>
+        <p class="log-role">Estagiário de Infraestrutura</p>
+        <p class="log-desc">
+          Suporte ao ambiente de virtualização Microsoft Hyper-V — criação e gerenciamento de VMs, alocação
+          de recursos e monitoramento de desempenho de hosts.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section id="skills">
   <div class="wrap">
     <p class="kicker"><span class="p">$</span> systemctl status --all</p>
@@ -389,7 +495,8 @@
           <span class="svc-name">infra-cloud.service</span>
           <span class="svc-status">active</span>
         </div>
-        <p class="svc-list">Azure · AWS · Hyper-V · VMware<br>Windows Server · Linux · Active Directory</p>
+        <p class="svc-desc">Provisionamento, migração e manutenção de VMs e workloads em nuvem e ambientes virtualizados.</p>
+        <p class="svc-list">Azure (VMs, monitoramento) · AWS (EC2)<br>Hyper-V · VMware Horizon<br>Windows Server (AD, GPO) · Linux</p>
       </div>
 
       <div class="svc">
@@ -397,7 +504,8 @@
           <span class="svc-name">devops-automation.service</span>
           <span class="svc-status">active</span>
         </div>
-        <p class="svc-list">Terraform (IaC) · GitHub Actions (CI/CD)<br>Docker · Kubernetes · Power Automate</p>
+        <p class="svc-desc">Infraestrutura como código e pipelines que tiram deploy manual do caminho.</p>
+        <p class="svc-list">Terraform (IaC) · GitHub Actions (CI/CD)<br>Docker · Kubernetes<br>Power Automate</p>
       </div>
 
       <div class="svc">
@@ -405,7 +513,8 @@
           <span class="svc-name">network-security.service</span>
           <span class="svc-status">active</span>
         </div>
-        <p class="svc-list">FortiGate · DNS / SPF / DKIM / DMARC<br>Microsoft 365 · Exchange Online · Entra ID</p>
+        <p class="svc-desc">Redes, firewall e identidade — da regra de tráfego à entregabilidade de e-mail.</p>
+        <p class="svc-list">FortiGate · DNS / SPF / DKIM / DMARC<br>Microsoft 365 · Exchange Online<br>Entra ID (Azure AD)</p>
       </div>
 
       <div class="svc">
@@ -413,7 +522,17 @@
           <span class="svc-name">dev-backend.service</span>
           <span class="svc-status">active</span>
         </div>
-        <p class="svc-list">.NET · Python · React<br>APIs REST · Webhooks · n8n</p>
+        <p class="svc-desc">Integrações e automações para conectar sistemas e eliminar tarefa repetitiva.</p>
+        <p class="svc-list">.NET · Python · React<br>APIs REST · Webhooks<br>n8n · Power Automate</p>
+      </div>
+
+      <div class="svc">
+        <div class="svc-head">
+          <span class="svc-name">integration-ai.service</span>
+          <span class="svc-status">active</span>
+        </div>
+        <p class="svc-desc">Integração híbrida de sistemas e aplicação prática de IA generativa no fluxo de trabalho.</p>
+        <p class="svc-list">IBM webMethods (Hybrid Integration)<br>Claude API · Claude Code<br>Model Context Protocol (MCP)</p>
       </div>
 
     </div>
@@ -425,9 +544,16 @@
     <p class="kicker"><span class="p">$</span> ls -la ./certificacoes</p>
     <h2 class="section-title">Certificações</h2>
     <ul class="certs">
+      <li><span class="tag">[IBM]</span><span class="cname">webMethods Hybrid Integration Sales Foundation</span></li>
+      <li><span class="tag">[IBM]</span><span class="cname">webMethods Integration On-Premises Basic</span></li>
+      <li><span class="tag">[IBM]</span><span class="cname">webMethods B2B SaaS Basic</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Building with the Claude API</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Claude Code in Action</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Introduction to Agent Skills</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Introduction to Model Context Protocol</span></li>
       <li><span class="tag">[AWS]</span><span class="cname">AWS Academy Graduate — Cloud Foundations</span></li>
       <li><span class="tag">[AWS]</span><span class="cname">AWS Academy Graduate — Machine Learning Foundations</span></li>
-      <li><span class="tag">[CCNA]</span><span class="cname">Switching, Routing, and Wireless Essentials</span></li>
+      <li><span class="tag">[Cisco]</span><span class="cname">CCNA: Switching, Routing, and Wireless Essentials</span></li>
     </ul>
   </div>
 </section>
