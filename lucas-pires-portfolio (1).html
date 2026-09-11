@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas Pires — Infraestrutura & DevOps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0d1117;
+    --surface: #12181f;
+    --panel-border: #232b34;
+    --text: #c9d1d9;
+    --text-dim: #6e7883;
+    --amber: #ffb454;
+    --cyan: #6bd4dd;
+    --green: #7ee787;
+    --red: #f8817a;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --panel-border: #d7dde3;
+      --text: #1c2530;
+      --text-dim: #6b7684;
+      --amber: #b5720a;
+      --cyan: #0d7d8a;
+      --green: #1a7a41;
+      --red: #b8322a;
+    }
+  }
+
+  :root[data-theme="light"]{
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --panel-border: #d7dde3;
+    --text: #1c2530;
+    --text-dim: #6b7684;
+    --amber: #b5720a;
+    --cyan: #0d7d8a;
+    --green: #1a7a41;
+    --red: #b8322a;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+
+  a{ color: inherit; }
+
+  .wrap{
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  nav{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--panel-border);
+  }
+  nav .wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    max-width: 860px;
+  }
+  .brand{
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+  }
+  .brand .prompt{ color: var(--green); }
+  .navlinks{
+    display: flex;
+    gap: 22px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .navlinks a{ text-decoration: none; transition: color .15s ease; }
+  .navlinks a:hover{ color: var(--cyan); }
+  .navlinks a:focus-visible, a:focus-visible{ outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  @media (max-width: 560px){
+    .navlinks{ gap: 14px; font-size: 11px; }
+  }
+
+  /* HERO */
+  header.hero{
+    padding: 90px 0 70px;
+  }
+  .term{
+    background: var(--surface);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -30px rgba(0,0,0,0.6);
+  }
+  .term-bar{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .dot{ width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r{ background: #f8817a55; border: 1px solid #f8817a; }
+  .dot.y{ background: #ffb45455; border: 1px solid var(--amber); }
+  .dot.g{ background: #7ee78755; border: 1px solid var(--green); }
+  .term-title{
+    margin-left: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .term-body{
+    padding: 22px 20px 26px;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+  .term-line{ color: var(--text-dim); margin-bottom: 6px; }
+  .term-line .p{ color: var(--green); }
+  .term-out{
+    color: var(--text);
+    margin: 0 0 16px 0;
+    white-space: pre-wrap;
+  }
+  .cursor{
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: var(--amber);
+    margin-left: 2px;
+    vertical-align: -3px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+
+  .hero-title{
+    margin: 36px 0 10px;
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: clamp(34px, 6vw, 54px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .hero-sub{
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 46ch;
+    margin: 0;
+  }
+  .hero-sub strong{ color: var(--text); font-weight: 600; }
+
+  /* SECTION SHARED */
+  section{ padding: 64px 0; border-top: 1px solid var(--panel-border); }
+  .kicker{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--cyan);
+    margin: 0 0 14px;
+  }
+  .kicker .p{ color: var(--green); }
+  h2.section-title{
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ABOUT */
+  .about p{
+    max-width: 62ch;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .about p + p{ margin-top: 14px; }
+
+  /* TIMELINE */
+  .log{
+    border-left: 2px solid var(--panel-border);
+    margin-left: 6px;
+    padding-left: 26px;
+  }
+  .log-entry{
+    position: relative;
+    padding-bottom: 30px;
+  }
+  .log-entry:last-child{ padding-bottom: 0; }
+  .log-entry::before{
+    content: '';
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--green);
+  }
+  .log-entry.current::before{ border-color: var(--amber); }
+  .log-time{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin: 0 0 4px;
+  }
+  .log-time .tag{
+    color: var(--amber);
+    border: 1px solid color-mix(in srgb, var(--amber) 45%, transparent);
+    border-radius: 100px;
+    padding: 1px 8px;
+    margin-left: 8px;
+    font-size: 10px;
+  }
+  .log-role{
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 8px;
+  }
+  .log-desc{
+    font-size: 14px;
+    color: var(--text-dim);
+    margin: 0;
+    max-width: 58ch;
+  }
+
+  /* SKILLS DASHBOARD */
+  .board{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 640px){
+    .board{ grid-template-columns: 1fr; }
+  }
+  .svc{
+    border: 1px solid var(--panel-border);
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .svc-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .svc-name{
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .svc-status{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    border: 1px solid color-mix(in srgb, var(--green) 45%, transparent);
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .svc-status::before{
+    content: '●';
+    margin-right: 5px;
+    font-size: 9px;
+  }
+  .svc-desc{
+    font-size: 13px;
+    color: var(--text);
+    margin: 0 0 10px;
+    line-height: 1.5;
+  }
+  .svc-list{
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.7;
+    font-family: var(--mono);
+  }
+
+  /* CERTS */
+  .certs{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+  .certs li{
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--panel-border);
+    color: var(--text-dim);
+  }
+  .certs li:last-child{ border-bottom: none; }
+  .certs .tag{ color: var(--cyan); flex-shrink: 0; }
+  .certs .cname{ color: var(--text); }
+
+  /* CONTACT */
+  .contact-term .term-body{ font-size: 15px; }
+  .contact-links{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .btn{
+    font-family: var(--mono);
+    font-size: 13px;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    transition: border-color .15s ease, color .15s ease;
+    display: inline-block;
+  }
+  .btn:hover{ border-color: var(--cyan); color: var(--cyan); }
+  .btn.primary{
+    background: var(--amber);
+    border-color: var(--amber);
+    color: #1a1408;
+    font-weight: 700;
+  }
+  .btn.primary:hover{ color: #1a1408; opacity: 0.9; border-color: var(--amber); }
+
+  footer{
+    padding: 30px 0 50px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .theme-toggle{
+    font-family: var(--mono);
+    font-size: 12px;
+    background: none;
+    border: 1px solid var(--panel-border);
+    color: var(--text-dim);
+    padding: 5px 10px;
+    border-radius: 100px;
+    cursor: pointer;
+  }
+  .theme-toggle:hover{ color: var(--cyan); border-color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="prompt">$</span> lucas.pires</div>
+    <div class="navlinks">
+      <a href="#sobre">~/sobre</a>
+      <a href="#trajetoria">~/trajetoria</a>
+      <a href="#skills">~/skills</a>
+      <a href="#certs">~/certs</a>
+      <a href="#contato">~/contato</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">lucas@infra: ~</span>
+      </div>
+      <div class="term-body">
+        <div class="term-line"><span class="p">$</span> whoami</div>
+        <p class="term-out" id="typeline"></p>
+      </div>
+    </div>
+
+    <h1 class="hero-title">Lucas Pires</h1>
+    <p class="hero-sub">
+      Infraestrutura, Cloud e DevOps para empresas que precisam de
+      <strong>sistemas que não caem</strong> e de <strong>processos que não dependem de uma pessoa só</strong>.
+    </p>
+  </div>
+</header>
+
+<section id="sobre">
+  <div class="wrap about">
+    <p class="kicker"><span class="p">$</span> cat sobre.txt</p>
+    <h2 class="section-title">Sobre</h2>
+    <p>
+      Trabalho com infraestrutura de TI há mais de seis anos, passando por suporte técnico, monitoramento de rede
+      em ambientes corporativos críticos e, hoje, atuação como analista de infraestrutura com foco crescente em DevOps.
+    </p>
+    <p>
+      Minha base é sólida em ambientes Microsoft (Active Directory, Microsoft 365, Exchange Online), nuvem
+      (Azure e AWS) e redes/firewalls (FortiGate). A partir dessa base, expandi para infraestrutura como código,
+      pipelines de CI/CD, containerização e automação — trazendo pra parte de desenvolvimento a mesma disciplina
+      de confiabilidade que aprendi cuidando de sistemas em produção.
+    </p>
+    <p>
+      Gosto de projetos onde infraestrutura e automação resolvem um problema real: menos tarefa manual,
+      menos ponto único de falha, mais visibilidade sobre o que está acontecendo.
+    </p>
+  </div>
+</section>
+
+<section id="trajetoria">
+  <div class="wrap">
+    <p class="kicker"><span class="p">$</span> tail -f trajetoria.log</p>
+    <h2 class="section-title">Trajetória</h2>
+    <div class="log">
+
+      <div class="log-entry current">
+        <p class="log-time">out/2025 → atual <span class="tag">atual</span></p>
+        <p class="log-role">Analista de Infraestrutura Pleno / DevOps</p>
+        <p class="log-desc">
+          Infraestrutura como código com Terraform para provisionamento em Azure e AWS, pipelines de CI/CD com
+          GitHub Actions, containerização com Docker e orquestração em Kubernetes. Também sigo administrando
+          ambientes Windows/Linux, Microsoft 365 e a intranet corporativa.
+        </p>
+      </div>
+
+      <div class="log-entry">
+        <p class="log-time">ago/2023 → out/2025</p>
+        <p class="log-role">Analista NOC</p>
+        <p class="log-desc">
+          Monitoramento de tráfego de rede e sistemas em tempo real em ambiente corporativo de grande porte
+          (setor bancário), resposta a incidentes e troubleshooting. Coordenava escala de plantão da equipe,
+          treinava novos analistas e era o ponto focal técnico do time.
+        </p>
+      </div>
+
+      <div class="log-entry">
+        <p class="log-time">out/2021 → ago/2022</p>
+        <p class="log-role">Analista de Suporte</p>
+        <p class="log-desc">
+          Administração de contas, grupos e políticas de segurança no Active Directory, rotinas de backup e
+          recuperação de dados, documentação técnica de procedimentos operacionais.
+        </p>
+      </div>
+
+      <div class="log-entry">
+        <p class="log-time">jan/2019 → jul/2020</p>
+        <p class="log-role">Estagiário de Infraestrutura</p>
+        <p class="log-desc">
+          Suporte ao ambiente de virtualização Microsoft Hyper-V — criação e gerenciamento de VMs, alocação
+          de recursos e monitoramento de desempenho de hosts.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <p class="kicker"><span class="p">$</span> systemctl status --all</p>
+    <h2 class="section-title">Skills</h2>
+    <div class="board">
+
+      <div class="svc">
+        <div class="svc-head">
+          <span class="svc-name">infra-cloud.service</span>
+          <span class="svc-status">active</span>
+        </div>
+        <p class="svc-desc">Provisionamento, migração e manutenção de VMs e workloads em nuvem e ambientes virtualizados.</p>
+        <p class="svc-list">Azure (VMs, monitoramento) · AWS (EC2)<br>Hyper-V · VMware Horizon<br>Windows Server (AD, GPO) · Linux</p>
+      </div>
+
+      <div class="svc">
+        <div class="svc-head">
+          <span class="svc-name">devops-automation.service</span>
+          <span class="svc-status">active</span>
+        </div>
+        <p class="svc-desc">Infraestrutura como código e pipelines que tiram deploy manual do caminho.</p>
+        <p class="svc-list">Terraform (IaC) · GitHub Actions (CI/CD)<br>Docker · Kubernetes<br>Power Automate</p>
+      </div>
+
+      <div class="svc">
+        <div class="svc-head">
+          <span class="svc-name">network-security.service</span>
+          <span class="svc-status">active</span>
+        </div>
+        <p class="svc-desc">Redes, firewall e identidade — da regra de tráfego à entregabilidade de e-mail.</p>
+        <p class="svc-list">FortiGate · DNS / SPF / DKIM / DMARC<br>Microsoft 365 · Exchange Online<br>Entra ID (Azure AD)</p>
+      </div>
+
+      <div class="svc">
+        <div class="svc-head">
+          <span class="svc-name">dev-backend.service</span>
+          <span class="svc-status">active</span>
+        </div>
+        <p class="svc-desc">Integrações e automações para conectar sistemas e eliminar tarefa repetitiva.</p>
+        <p class="svc-list">.NET · Python · React<br>APIs REST · Webhooks<br>n8n · Power Automate</p>
+      </div>
+
+      <div class="svc">
+        <div class="svc-head">
+          <span class="svc-name">integration-ai.service</span>
+          <span class="svc-status">active</span>
+        </div>
+        <p class="svc-desc">Integração híbrida de sistemas e aplicação prática de IA generativa no fluxo de trabalho.</p>
+        <p class="svc-list">IBM webMethods (Hybrid Integration)<br>Claude API · Claude Code<br>Model Context Protocol (MCP)</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <p class="kicker"><span class="p">$</span> ls -la ./certificacoes</p>
+    <h2 class="section-title">Certificações</h2>
+    <ul class="certs">
+      <li><span class="tag">[IBM]</span><span class="cname">webMethods Hybrid Integration Sales Foundation</span></li>
+      <li><span class="tag">[IBM]</span><span class="cname">webMethods Integration On-Premises Basic</span></li>
+      <li><span class="tag">[IBM]</span><span class="cname">webMethods B2B SaaS Basic</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Building with the Claude API</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Claude Code in Action</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Introduction to Agent Skills</span></li>
+      <li><span class="tag">[Anthropic]</span><span class="cname">Introduction to Model Context Protocol</span></li>
+      <li><span class="tag">[AWS]</span><span class="cname">AWS Academy Graduate — Cloud Foundations</span></li>
+      <li><span class="tag">[AWS]</span><span class="cname">AWS Academy Graduate — Machine Learning Foundations</span></li>
+      <li><span class="tag">[Cisco]</span><span class="cname">CCNA: Switching, Routing, and Wireless Essentials</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="contato">
+  <div class="wrap">
+    <p class="kicker"><span class="p">$</span> contact --new</p>
+    <h2 class="section-title">Contato</h2>
+    <div class="term contact-term">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">lucas@infra: ~/contato</span>
+      </div>
+      <div class="term-body">
+        <div class="term-line"><span class="p">$</span> echo "Vamos conversar sobre seu projeto?"</div>
+        <p class="term-out">Vamos conversar sobre seu projeto?<span class="cursor"></span></p>
+        <div class="contact-links">
+          <a class="btn primary" href="mailto:lucas.maia97@hotmail.com">Enviar e-mail</a>
+          <a class="btn" href="https://www.linkedin.com/in/lucas-pires0610" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="tel:+5551992777429">(51) 99277-7429</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+    <span>$ echo "© <span id="year"></span> Lucas Pires"</span>
+    <button class="theme-toggle" id="themeBtn" type="button">alternar tema</button>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // typing effect
+  (function(){
+    var el = document.getElementById('typeline');
+    var text = 'lucas.pires — infraestrutura & devops';
+    var i = 0;
+    function tick(){
+      if(i <= text.length){
+        el.innerHTML = text.slice(0, i) + '<span class="cursor"></span>';
+        i++;
+        setTimeout(tick, 38);
+      }
+    }
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      el.innerHTML = text;
+    } else {
+      tick();
+    }
+  })();
+
+  // theme toggle (per-viewer convenience only)
+  (function(){
+    var btn = document.getElementById('themeBtn');
+    var root = document.documentElement;
+    try{
+      var saved = localStorage.getItem('theme-pref');
+      if(saved){ root.setAttribute('data-theme', saved); }
+    }catch(e){}
+    btn.addEventListener('click', function(){
+      var current = root.getAttribute('data-theme');
+      var next = current === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      try{ localStorage.setItem('theme-pref', next); }catch(e){}
+    });
+  })();
+</script>
+
+</body>
+</html>
